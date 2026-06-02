@@ -7,14 +7,14 @@ on:
 jobs:
     Valid-Postgres:
         runs-on: ubuntu-latest
-        serivces:
+        services:
             postgress-service:
                 image: postgres:18-alpine3.23
                 env:
                     POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }} 
                     POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
                     POSTGRES_DB: pro_test_db
-                port:
+                ports:
                     - 5432:5432
                 options: >-
                     --health-cmd pg_isready
@@ -51,7 +51,7 @@ jobs:
                 else
                    echo "Faild: Verification failed. Unexpected cell value."
                 exit 1
-               fi
+                fi
 
             
         
