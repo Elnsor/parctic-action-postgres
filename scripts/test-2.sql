@@ -1,7 +1,7 @@
 -- free tables
 
-DROP TABLE IF EXISTS automated_test_logs
-DROP TABLE IF EXISTS users
+DROP TABLE IF EXISTS automated_test_logs;
+DROP TABLE IF EXISTS users;
 
 -- create tables 
 
