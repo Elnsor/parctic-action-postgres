@@ -36,7 +36,7 @@ jobs:
                 PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
               run: |
                 echo "Connecting to containerized PostgreSQL service..."
-                # We pass the local .sql file straight into the container service running on localhost
+                #  We pass the local .sql file straight into the container service running on localhost
                 psql -h localhost -U ${{ secrets.POSTGRES_USERNAME}} -d pro_test_db -f scripts/test.sql
 
             - name: Extract Cell Value Verification
