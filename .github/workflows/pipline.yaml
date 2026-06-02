@@ -51,12 +51,12 @@ jobs:
                 PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
               run: |
                 # Fetch only the raw value of the execution status cell for the second test row
-                TARGET_CELL=$(psql -h localhost -U runner_admin -d pro_test_db -t -c "SELECT test_name FROM automated_test_logs WHERE id = 3;" | tr -d ' ')
+                TARGET_CELL=$(psql -h localhost -U runner_admin -d pro_test_db -t -c "SELECT username FROM users WHERE id = 1;" | tr -d ' ')
                 echo "Extracted cell verification status is: $TARGET_CELL"
-                if [ "$TARGET_CELL" = "my_test" ]; then
-                   echo "✅ Database integration verified successfully!"
+                if [ "$TARGET_CELL" = "cloud_engineer" ]; then
+                   echo "[PASS]: Database integration verified successfully!"
                 else
-                   echo "Faild: Verification failed. Unexpected cell value."
+                   echo "[Faild]: Verification failed. Unexpected cell value."
                 exit 1
                 fi
             - name: CHECK CRUD
@@ -82,7 +82,7 @@ jobs:
                 if [ "$UNIQ" = "PASS" ]; then
                    echo "[PASS]: Database Constraint verified successfully!"
                 else
-                   echo "[Faild]: Constraint failed. Unexpected cell value."
+                   echo "[ Faild ]: Constraint failed. Unexpected cell value."
                 exit 1
                 fi
 
