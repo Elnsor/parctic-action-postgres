@@ -11,5 +11,8 @@ VALUES ('GitHub Actions Container Bridge Connection', 'SUCCESS');
 INSERT INTO automated_test_logs (test_name, execution_status) 
 VALUES ('Database Query Execution Logic', 'SUCCESS');
 
+INSERT INTO automated_test_logs (test_name, execution_status) 
+VALUES ('my_test', 'FAILD');
+
 -- 3. Query back a specific cell to print to the runner logs (Receive Data)
 SELECT test_name, execution_status FROM automated_test_logs;
