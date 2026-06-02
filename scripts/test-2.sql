@@ -34,7 +34,7 @@ WHERE username = 'cloud_engineer';
 
 INSERT INTO automated_test_logs(test_name,test_result)
 SELECT 'UPDATE_LOGIC_TEST', 
-CASE WHEN is_active = true THEN 'PASS' ELSE 'FAILD'
+CASE WHEN is_active = true THEN 'PASS' ELSE 'FAILD' END
 FROM users 
 WHERE username = 'cloud_engineer';
 
@@ -47,14 +47,14 @@ INSERT INTO users(username, email, is_active)
 VALUES ('cloud_engineer','engineer@example.com',false);
 
 INSERT INTO automated_test_logs(test_name,test_result)
-VALUES ('CONSTRAINT_TEST','FAILD')
+VALUES ('CONSTRAINT_TEST','FAILD');
 EXCEPtION WHEN unique_violation THEN
 INSERT INTO automated_test_logs(test_name,test_result)
-VALUES ('CONSTRAINT_TEST','PASS')
+VALUES ('CONSTRAINT_TEST','PASS');
 END $$;
 
 -- print the result from automated_test_log 
-SELECT * FROM automated_test_log
+SELECT * FROM automated_test_log ;
 ---end testing
 
 
