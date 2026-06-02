@@ -73,9 +73,9 @@ jobs:
                 exit 1
                 fi
             - name: CHECK UNIQENES
-               env:
+              env:
                  PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
-               run: |
+              run: |
                 # Fetch the 'CONSTRAINT_TEST' schema constraint from automated_test_logs
                 UNIQ=$(psql -h localhost -U runner_admin -d pro_test_db -t -c "SELECT test_result FROM automated_test_logs WHERE test_name = 'CONSTRAINT_TEST';" | tr -d ' ')
                 echo "Extracted cell verification status is: $TARGET_CELL"
