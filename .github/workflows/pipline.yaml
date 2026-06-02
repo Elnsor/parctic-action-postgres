@@ -44,7 +44,7 @@ jobs:
                 PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
               run: |
                 # Fetch only the raw value of the execution status cell for the second test row
-                TARGET_CELL=$(psql -h localhost -U runner_admin -d production_test_db -t -c "SELECT test_name FROM automated_test_logs WHERE id = 3;" | tr -d ' ')
+                TARGET_CELL=$(psql -h localhost -U runner_admin -d pro_test_db -t -c "SELECT test_name FROM automated_test_logs WHERE id = 3;" | tr -d ' ')
                 echo "Extracted cell verification status is: $TARGET_CELL"
                 if [ "$TARGET_CELL" = "my_test" ]; then
                    echo "✅ Database integration verified successfully!"
