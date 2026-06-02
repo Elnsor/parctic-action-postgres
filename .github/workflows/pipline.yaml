@@ -1,0 +1,58 @@
+name: Test Postgres
+on:
+    push:
+        branches:
+            - main 
+            - 'feature/**'
+jobs:
+    Valid-Postgres:
+        runs-on: ubuntu-latest
+        serivces:
+            postgress-service:
+                image: postgres:18-alpine3.23
+                env:
+                    POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }} 
+                    POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+                    POSTGRES_DB: pro_test_db
+                port:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+        steps:
+            # Step 1: Pull down the repository code files onto the runner machine
+            - name: Upload repo 
+              uses: actions/checkout@v6
+            # Step 2: Install the native lightweight client tool on the runner machine
+            - name: Install PostgreSQL Client Utility
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y postgresql-client
+            - name: Execute Non-Interactive SQL Tests
+              env:
+                PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
+              run: |
+                echo "Connecting to containerized PostgreSQL service..."
+          
+                 # We pass the local .sql file straight into the container service running on localhost
+                psql -h localhost -U ${{ secrets.POSTGRES_USERNAME}} -d pro_test_db -f scripts/db_test_queries.sql
+
+            - name: Extract Cell Value Verification
+              env:
+                PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
+              run: |
+                # Fetch only the raw value of the execution status cell for the second test row
+                TARGET_CELL=$(psql -h localhost -U runner_admin -d production_test_db -t -c "SELECT test_name FROM automated_test_logs WHERE id = 3;" | tr -d ' ')
+              
+                echo "Extracted cell verification status is: $TARGET_CELL"
+                if [ "$TARGET_CELL" = "my_test" ]; then
+                   echo "✅ Database integration verified successfully!"
+                else
+                   echo "Faild: Verification failed. Unexpected cell value."
+                exit 1
+               fi
+
+            
+        
