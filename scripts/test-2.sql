@@ -54,7 +54,7 @@ VALUES ('CONSTRAINT_TEST','PASS');
 END $$;
 
 -- print the result from automated_test_log 
-SELECT * FROM automated_test_log ;
+SELECT * FROM automated_test_logs ;
 ---end testing
 
 
