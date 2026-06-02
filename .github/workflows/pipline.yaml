@@ -31,13 +31,20 @@ jobs:
                 sudo apt-get update
                 sudo apt-get install -y postgresql-client
             ## execut some query to postgres db
+            - name: Run Database Smoke Test
+              env:
+                PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+              run: |
+                echo "Executing pg_isready smoke test..."
+                pg_isready -h localhost -p 5432 -U ${{ secrets.POSTGRES_USERNAME }}
+
             - name: Execute Non-Interactive SQL Tests
               env:
                 PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
               run: |
                 echo "Connecting to containerized PostgreSQL service..."
                 #  We pass the local .sql file straight into the container service running on localhost
-                psql -h localhost -U ${{ secrets.POSTGRES_USERNAME}} -d pro_test_db -f scripts/test.sql
+                psql -h localhost -U ${{ secrets.POSTGRES_USERNAME}} -d pro_test_db -f scripts/test-2.sql
 
             - name: Extract Cell Value Verification
               env:
@@ -50,6 +57,32 @@ jobs:
                    echo "✅ Database integration verified successfully!"
                 else
                    echo "Faild: Verification failed. Unexpected cell value."
+                exit 1
+                fi
+            - name: CHECK CRUD
+              env:
+                PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
+              run: |
+                # Fetch the 'UPDATE_LOGIC_TEST' from automated_test_logs
+                CRUD=$(psql -h localhost -U runner_admin -d pro_test_db -t -c "SELECT test_result FROM automated_test_logs WHERE test_name = 'UPDATE_LOGIC_TEST';" | tr -d ' ')
+                echo "Extracted cell verification status is: $TARGET_CELL"
+                if [ "$CRUD" = "PASS" ]; then
+                   echo "[PASS]: Database integration verified successfully!"
+                else
+                   echo "[Faild]: Verification failed. Unexpected cell value."
+                exit 1
+                fi
+            - name: CHECK UNIQENES
+               env:
+                 PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
+               run: |
+                # Fetch the 'CONSTRAINT_TEST' schema constraint from automated_test_logs
+                UNIQ=$(psql -h localhost -U runner_admin -d pro_test_db -t -c "SELECT test_result FROM automated_test_logs WHERE test_name = 'CONSTRAINT_TEST';" | tr -d ' ')
+                echo "Extracted cell verification status is: $TARGET_CELL"
+                if [ "$UNIQ" = "PASS" ]; then
+                   echo "[PASS]: Database Constraint verified successfully!"
+                else
+                   echo "[Faild]: Constraint failed. Unexpected cell value."
                 exit 1
                 fi
 
