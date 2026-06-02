@@ -41,7 +41,7 @@ WHERE username = 'cloud_engineer';
 --- test layer b for constraint in uniquenes 
 -- add duplicate email via exception 
 -- test name is 'CONSTRAINT_TEST'
-DO $$
+DO $$ 
 BEGIN 
 INSERT INTO users(username, email, is_active)
 VALUES ('cloud_engineer','engineer@example.com',false);
